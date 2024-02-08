@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,11 +30,13 @@
             margin-bottom: 10px;
         }
 
-        input {
+        input#docnum {
             width: 100%;
             padding: 10px;
             box-sizing: border-box;
-            margin-bottom: 20px;
+            margin-bottom: 10px; /* Ajustar el margen entre el input y el botón */
+            border: 1px solid #ccc;
+            outline: none;
         }
 
         button {
@@ -44,25 +47,39 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            margin-bottom: 20px;
         }
 
         button:hover {
             background-color: #45a049;
         }
 
-        #resultado {
-            font-size: 18px;
-            margin-top: 20px;
+        .readonly {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            border: none;
+            outline: none;
+            background-color: #f4f4f4;
+            color: #333;
+            cursor: not-allowed;
+        }
+
+        #referenciaLabel, #digitoLabel, #referenciaCompleta, #resultado {
+            display: none;
+        }
+
+        #textos {
+            text-align: left;
+            margin-bottom: 10px;
         }
     </style>
     <script>
         function calcularDigito() {
-            // Obtener el valor del textbox
             var cadena = document.getElementById('docnum').value;
 
-            // Verificar si el valor ingresado es un número
             if (!isNaN(cadena)) {
-                // Inicializar variables
                 var digito = 0;
                 var parImp = cadena.length % 2;
                 var indice = 1;
@@ -95,24 +112,48 @@
 
                 var resultado = valorRedondeado - digito;
 
-                // Mostrar el resultado en un elemento HTML
-                document.getElementById('resultado').innerHTML = "Dígito: " + resultado;
+                // Mostrar los resultados en textboxes separados
+                document.getElementById('referenciaLabel').style.display = 'inline-block';
+                document.getElementById('digitoLabel').style.display = 'inline-block';
+                document.getElementById('referenciaCompleta').value = cadena + resultado;
+                document.getElementById('resultado').value = resultado;
+
+                // Mostrar los textos y textboxes
+                document.getElementById('referenciaCompleta').style.display = 'block';
+                document.getElementById('resultado').style.display = 'block';
             } else {
-                // Mostrar mensaje de error si el valor no es un número
-                document.getElementById('resultado').innerHTML = "Ingrese un valor numérico válido.";
+                document.getElementById('referenciaCompleta').value = "Ingrese un valor numérico válido.";
+                document.getElementById('resultado').value = "";
+                document.getElementById('referenciaLabel').style.display = 'none'; // Ocultar el texto en caso de error
+                document.getElementById('digitoLabel').style.display = 'none'; // Ocultar el texto en caso de error
+                document.getElementById('referenciaCompleta').style.display = 'block'; // Mostrar el textbox en caso de error
+                document.getElementById('resultado').style.display = 'none'; // Ocultar el textbox en caso de error
             }
         }
     </script>
 </head>
+
 <body>
     <div id="calculator">
         <h1>Generador de Referencia</h1>
-        <label for="docnum">Ingrese el folio:</label>
-        <input type="text" id="docnum" placeholder="Ingrese el valor">
+        <div id="textos">
+            <label for="docnum">Ingrese el folio:</label>
+            <input type="text" id="docnum" placeholder="Ingrese el valor">
+        </div>
 
-        <button onclick="calcularDigito()">Obtener Dígito</button>
+        <button onclick="calcularDigito()">Generar Dígito</button>
+        
+        <div>
+            <label id="digitoLabel">Dígito:</label>
+            <input id="resultado" class="readonly" readonly>
+        </div>
 
-        <div id="resultado"></div>
+        <div>
+            <label id="referenciaLabel">Referencia Completa:</label>
+            <input id="referenciaCompleta" class="readonly" readonly>
+        </div>
+
     </div>
 </body>
+
 </html>
